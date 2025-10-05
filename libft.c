@@ -586,7 +586,8 @@ bool test_bzero(void)
 bool _test_memcpy(void *dest, const void *src, size_t n)
 {
 	void *dest_dup = malloc(n);
-	memcpy(dest_dup, dest, n);
+	if (!dest_dup)
+		return (false);
 	ft_memcpy(dest_dup, src, n);
 	memcpy(dest, src, n);
 	if (memcmp(dest_dup, dest, n) != 0)
@@ -610,9 +611,16 @@ bool _test_memcpy(void *dest, const void *src, size_t n)
 bool test_memcpy(void)
 {
     printf("test_memcpy: ");
-    t_test1 src = {0x12345678, true, 0xABCD, false};
+    t_test1 src;
     t_test1 dst;
-    uint8_t buf_src[256], buf_dst[256];
+	memset(&dst, 0, sizeof(t_test1));
+	memset(&src, 0, sizeof(t_test1));
+	src.a = 0x12345678;
+	src.b = true;
+	src.c = 0xABCD;
+	src.d = false;
+    uint8_t buf_src[256] = {0};
+	uint8_t buf_dst[256] = {0};
     for (size_t i = 0; i < 256; i++) buf_src[i] = i;
 
     if (!_test_memcpy(&dst, &src, sizeof(t_test1))) return false;
