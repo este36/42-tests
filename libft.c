@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
+#include <bsd/string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,8 +19,10 @@
 #include <ctype.h>
 
 #define ANSI_GREEN "\x1b[32m"
+#define ANSI_RED "\x1b[31m"
 #define ANSI_RESET "\x1b[0m"
 #define OK() printf(ANSI_GREEN"OK"ANSI_RESET"\n")
+#define ERROR() printf(ANSI_RED"Error!"ANSI_RESET"\n")
 
 bool test_isprint(void)
 {
@@ -28,6 +31,7 @@ bool test_isprint(void)
 	{
 		if ((ft_isprint(i) != 0) != (isprint(i) != 0))
 		{
+			ERROR();
 			printf(
 				"[input: %d]\nc_res: %d\nft_res: %d",
 				i, isprint(i), ft_isprint(i)
@@ -46,6 +50,7 @@ bool test_isascii(void)
 	{
 		if ((ft_isascii(i) != 0) != (isascii(i) != 0))
 		{
+			ERROR();
 			printf(
 				"[input: %d]\nc_res: %d\nft_res: %d",
 				i, isascii(i), ft_isascii(i)
@@ -64,6 +69,7 @@ bool test_isalnum(void)
 	{
 		if ((ft_isalnum(i) != 0) != (isalnum(i) != 0))
 		{
+			ERROR();
 			printf(
 				"[input: %d]\nc_res: %d\nft_res: %d",
 				i, isalnum(i), ft_isalnum(i)
@@ -82,6 +88,7 @@ bool test_isdigit(void)
 	{
 		if ((ft_isdigit(i) != 0) != (isdigit(i) != 0))
 		{
+			ERROR();
 			printf(
 				"[input: %d]\nc_res: %d\nft_res: %d",
 				i, isdigit(i), ft_isdigit(i)
@@ -100,6 +107,7 @@ bool test_isalpha(void)
 	{
 		if ((ft_isalpha(i) != 0) != (isalpha(i) != 0))
 		{
+			ERROR();
 			printf(
 				"[input: %d]\nc_res: %d\nft_res: %d",
 				i, isalpha(i), ft_isalpha(i)
@@ -118,6 +126,7 @@ bool _test_strrchr(const char *s, int c)
 	const char	*ft_res = ft_strrchr(s, c);
 	if (c_res != ft_res)
 	{
+		ERROR();
 		printf(
 			"[input: s: %p \"%s\", c: '%c']\nc_res: %p\nft_res: %p",
 			s, s, c, c_res, ft_res
@@ -148,6 +157,7 @@ bool _test_strchr(const char *s, int c)
 	const char	*ft_res = ft_strchr(s, c);
 	if (c_res != ft_res)
 	{
+		ERROR();
 		printf(
 			"[input: s: %p \"%s\", c: '%c']\nc_res: %p\nft_res: %p",
 			s, s, c, c_res, ft_res
@@ -323,38 +333,6 @@ bool	test_ft_split(void)
 	return (true);
 }
 
-bool	_test_memchr(const void *s, int c, size_t n)
-{
-	const char *c_res = memchr(s, c, n);
-	const char *ft_res = ft_memchr(s, c, n);
-	if (c_res != ft_res)
-	{
-		printf(
-			"c res: {ptr: %p, index: %zu}, ft res: {ptr: %p, index: %zu}\n",
-			c_res, (size_t)(c_res - (char *)s),
-			ft_res, (size_t)(ft_res - (char *)s)
-		);
-		return (false);
-	}
-	return (true);
-}
-
-bool	test_memchr(void)
-{
-	const char	*s1 = "Hello";
-	const char	c1 = 'o';
-	const int	s2[] = {1, 43, -1, 4};
-	const int	c2 = -1;
-
-	printf("test_memchr: ");
-	if (!_test_memchr(s1, c1, sizeof(s1)))
-		return (false);
-	if (!_test_memchr(s2, c2, sizeof(s2)))
-		return (false);
-	OK();
-	return (true);
-}
-
 bool	_test_atoi(const char *nptr)
 {
 	const int	c_res = atoi(nptr);
@@ -362,6 +340,7 @@ bool	_test_atoi(const char *nptr)
 
 	if (c_res != ft_res)
 	{
+		ERROR();
 		printf("(input: \"%s\") c res: %d, ft res: %d", nptr, c_res, ft_res);
 		return (false);
 	}
@@ -425,6 +404,7 @@ bool _test_strlen(const char *s)
 	const size_t ft_res = ft_strlen(s);
 	if (c_res != ft_res)
 	{
+		ERROR();
 		printf(
 			"[input: \"%s\"]\nc_res: %zu, ft_res: %zu",
 			s, c_res, ft_res
@@ -451,7 +431,7 @@ bool test_strlen()
 	return (true);
 }
 
-void print_memory(void *s, size_t n)
+void print_memory(const void *s, const size_t n)
 {
 	const char *hex = "0123456789abcdef";
 	for (size_t i = 0; i < n; i++)
@@ -543,6 +523,7 @@ bool _test_bzero(void *s, size_t n)
 	ft_bzero(s_dup, n);
 	if (memcmp(s_dup, s, n) != 0)
 	{
+		ERROR();
 		printf(
 			"[inputs: s: %p, n: %zu]\nc_res: \n",
 			s, n
@@ -566,12 +547,9 @@ bool test_bzero(void)
 	t_test2 test2;
 	t_test3 test3;
 	char buf[1024];
-	if (!_test_bzero(&test1, sizeof(t_test1)))
-		return (false);
-	if (!_test_bzero(&test2, sizeof(t_test2)))
-		return (false);
-	if (!_test_bzero(&test3, sizeof(t_test3)))
-		return (false);
+	if (!_test_bzero(&test1, sizeof(t_test1))) return (false);
+	if (!_test_bzero(&test2, sizeof(t_test2))) return (false);
+	if (!_test_bzero(&test3, sizeof(t_test3))) return (false);
     if (!_test_bzero(buf, 0)) return false;
     if (!_test_bzero(buf, 1)) return false;
     if (!_test_bzero(buf, 256)) return false;
@@ -592,6 +570,7 @@ bool _test_memcpy(void *dest, const void *src, size_t n)
 	memcpy(dest, src, n);
 	if (memcmp(dest_dup, dest, n) != 0)
 	{
+		ERROR();
 		printf(
 			"[inputs: dest: %p, src: %p, n: %zu]\nc_res: \n",
 			dest, src, n
@@ -610,7 +589,6 @@ bool _test_memcpy(void *dest, const void *src, size_t n)
 
 bool test_memcpy(void)
 {
-    printf("test_memcpy: ");
     t_test1 src;
     t_test1 dst;
 	memset(&dst, 0, sizeof(t_test1));
@@ -623,11 +601,302 @@ bool test_memcpy(void)
 	uint8_t buf_dst[256] = {0};
     for (size_t i = 0; i < 256; i++) buf_src[i] = i;
 
+    printf("test_memcpy: ");
     if (!_test_memcpy(&dst, &src, sizeof(t_test1))) return false;
     if (!_test_memcpy(buf_dst, buf_src, 256)) return false;
     if (!_test_memcpy(buf_dst + 1, buf_src + 2, 100)) return false;
     OK();
     return true;
+}
+
+bool _test_memmove(const size_t dest_offset, const size_t src_offset, size_t n)
+{
+	const size_t buf_size = 512;
+	unsigned char buf_c[buf_size];
+	unsigned char buf_ft[buf_size];
+    for (size_t i = 0; i < buf_size; i++) buf_c[i] = buf_ft[i] = i % 256;
+	memmove(buf_c + dest_offset, buf_c + src_offset, n);
+	ft_memmove(buf_ft + dest_offset, buf_ft + src_offset, n);
+	if (memcmp(buf_c, buf_ft, buf_size) != 0)
+	{
+		ERROR();
+		printf(
+			"[inputs: dest_offest: %zu, src_offset: %zu, n: %zu]\nc_res: \n",
+			dest_offset, src_offset, n
+		);
+		print_memory(buf_c , buf_size);
+		printf("\nft_res:\n");
+		print_memory(buf_ft , buf_size);
+		printf("\n");
+		return false;
+	}
+	return true;
+}
+
+bool test_memmove(void)
+{
+	printf("test_memmove: ");
+	if (!_test_memmove(32, 64, 128)) return (false);
+	if (!_test_memmove(64, 32, 128)) return (false);
+	if (!_test_memmove(128, 129, 64)) return (false);
+	if (!_test_memmove(129, 128, 64)) return (false);
+	OK();
+	return true;
+}
+
+bool _test_strlcpy(char *dest, const char *src, size_t n)
+{
+	void *dest_dup = malloc(n);
+	if (!dest_dup)
+		return (false);
+	memcpy(dest_dup, dest, n);
+	const size_t c_res = strlcpy(dest, src, n);
+	const size_t ft_res = ft_strlcpy(dest_dup, src, n);
+
+	size_t cmp_len = strlen(src) + 1;
+	if (cmp_len > n) cmp_len = n;
+	if (memcmp(dest_dup, dest, cmp_len) != 0 || c_res != ft_res)
+	{
+		ERROR();
+		printf(
+			"[inputs: dest: %p, src: %p, n: %zu]\nc_res: %zu, ft_res: %zu\n",
+			dest, src, n, c_res, ft_res
+		);
+		printf("[Memory result]\nc_res: \n");
+		print_memory(dest, n);
+		printf("\nft_res:\n");
+		print_memory(dest_dup, n);
+		printf("\n");
+		free(dest_dup);
+		return (false);
+	}
+	free(dest_dup);
+	return (true);
+}
+
+bool test_strlcpy(void)
+{
+	char buf1[64] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+	char buf2[32] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+	char buf3[16] = "aaaaaaaaaaaaaaa";
+	printf("test_strlcpy: ");
+	if (!_test_strlcpy(buf1, "\x12\x98\x22\x1\x23", 64)) return false;
+	if (!_test_strlcpy(buf2, "", 32)) return false;
+	if (!_test_strlcpy(buf3, "lololololololololollllllllllllloaaaaaaaaabbbbcccc", 16)) return false;
+	OK();
+	return true;
+}
+
+bool _test_strlcat(char *dest, const char *src, size_t n)
+{
+	void *dest_dup = calloc(1, n);
+	if (!dest_dup)
+		return (false);
+	memcpy(dest_dup, dest, n);
+
+	const size_t c_res = strlcat(dest, src, n);
+	const size_t ft_res = ft_strlcat(dest_dup, src, n);
+
+	if (memcmp(dest_dup, dest, n) != 0 || c_res != ft_res)
+	{
+		ERROR();
+		printf(
+			"[inputs: dest: %p, src: %p, n: %zu]\nc_res: %zu, ft_res: %zu\n",
+			dest, src, n, c_res, ft_res
+		);
+		printf("[Memory result]\nc_res: \n");
+		print_memory(dest, n);
+		printf("\nft_res:\n");
+		print_memory(dest_dup, n);
+		printf("\n");
+		free(dest_dup);
+		return (false);
+	}
+	free(dest_dup);
+	return (true);
+}
+
+bool test_strlcat(void)
+{
+	char buf1[64] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+	char buf2[32] = "aaaaaaaaaaaaaaa\0aaaaaaaaaaaaaaa";
+	char buf3[16] = "aaaaaaaa\0aaaaaa";
+	printf("test_strlcat: ");
+	if (!_test_strlcat(buf1, "\x12\x98\x22\x1\x23", 64)) return false;
+	if (!_test_strlcat(buf2, "", 32)) return false;
+	if (!_test_strlcat(buf3, "lololololololololollllllllllllloaaaaaaaaabbbbcccc", 16)) return false;
+	OK();
+	return (true);
+}
+
+bool test_toupper(void)
+{
+	printf("test_toupper: ");
+	for (int i = 0; i < 512; i++)
+	{
+		if (ft_toupper(i) != toupper(i))
+		{
+			ERROR();
+			printf(
+				"[input: %d]\nc_res: %d\nft_res: %d",
+				i, toupper(i), ft_toupper(i)
+			);
+			return (false);
+		}
+	}
+	OK();
+	return (true);
+}
+
+bool test_tolower(void)
+{
+	printf("test_tolower: ");
+	for (int i = 0; i < 512; i++)
+	{
+		if (ft_tolower(i) != tolower(i))
+		{
+			ERROR();
+			printf(
+				"[input: %d]\nc_res: %d\nft_res: %d",
+				i, tolower(i), ft_tolower(i)
+			);
+			return (false);
+		}
+	}
+	OK();
+	return (true);
+}
+
+bool _test_strncmp(const char *s1, const char *s2, const size_t n)
+{
+	const int c_res = strncmp(s1, s2, n);
+	const int ft_res = ft_strncmp(s1, s2, n);
+	if (c_res != ft_res)
+	{
+		ERROR();
+		printf(
+			"[input: s1: %p \"%s\", s2: %p \"%s\", n: %zu]\nc_res: %d\nft_res: %d",
+			s1, s1, s2, s2, n, c_res, ft_res
+		);
+		return (false);
+	}
+	return (true);
+}
+
+
+bool test_strncmp()
+{
+	printf("test_strncmp: ");
+	if (!_test_strncmp("Hey", "Hey", 64)) return false;
+	if (!_test_strncmp("Brother eww", "ew", 16)) return false;
+	if (!_test_strncmp("ewwwwwww12jkhv02", "ewww09s8df", 4)) return false;
+	if (!_test_strncmp("doooomy", "doooomy", sizeof("doooomy"))) return false;
+	OK();
+	return (true);
+}
+
+bool	_test_memchr(const void *s, int c, size_t n)
+{
+	const char *c_res = memchr(s, c, n);
+	const char *ft_res = ft_memchr(s, c, n);
+	if (c_res != ft_res)
+	{
+		ERROR();
+		printf(
+			"c res: {ptr: %p, index: %zu}, ft res: {ptr: %p, index: %zu}\n",
+			c_res, (size_t)(c_res - (char *)s),
+			ft_res, (size_t)(ft_res - (char *)s)
+		);
+		return (false);
+	}
+	return (true);
+}
+
+bool	test_memchr(void)
+{
+	const char	*s1 = "Hello";
+	const int	s2[] = {1, 43, -1, 4};
+
+	printf("test_memchr: ");
+	if (!_test_memchr(s1, 'o', sizeof(s1))) return (false);
+	if (!_test_memchr(s1, 'o' + 512, sizeof(s1))) return (false);
+	if (!_test_memchr(s2, -1, sizeof(s2))) return (false);
+	OK();
+	return (true);
+}
+
+bool _test_memcmp(const void *s1, const void *s2, const size_t n)
+{
+	const int c_res = memcmp(s1, s2, n);
+	const int ft_res = ft_memcmp(s1, s2, n);
+	if (c_res != ft_res)
+	{
+		ERROR();
+		printf(
+			"[input: s1: %p, s2: %p, n: %zu]\nc_res: %d\nft_res: %d",
+			s1, s2, n, c_res, ft_res
+		);
+
+		printf("[Memory]\ns1: \n");
+		print_memory(s1, n);
+		printf("\ns2:\n");
+		print_memory(s2, n);
+		printf("\n");
+		return (false);
+	}
+	return (true);
+}
+
+bool test_memcmp(void)
+{
+	char buf1[] = {123, 2, 0, 209, 1, -123, 3, 2 , -34};
+	char buf2[] = {123, 2, 0, 209, 1, -123, 3, 2 , -34};
+	printf("test_memcmp: ");
+	if (!_test_memcmp(buf1, buf2, sizeof(buf1))) return false;
+	if (!_test_memcmp(buf1 + 2, buf2 + 2, sizeof(buf1) - 2)) return false;
+	if (!_test_memcmp("Hey", "Hey", 0)) return false;
+	if (!_test_memcmp("Brother eww", "ew", 1)) return false;
+	if (!_test_memcmp("ewwwwwww12jkhv02", "ewww09s8df", 4)) return false;
+	if (!_test_memcmp("doooomy", "doooomy", sizeof("doooomy"))) return false;
+
+	OK();
+	return (true);
+}
+
+bool _test_strnstr(const char *big, const char *little, size_t len)
+{
+	const char *c_res = strnstr(big, little, len);
+	const char *ft_res = ft_strnstr(big, little, len);
+	if (c_res != ft_res)
+	{
+		ERROR();
+		printf(
+			"[inputs: big: %s, little: %s, len: %zu]\nc_res:\n%p \"%s\"\nft_res:\n%p \"%s\"\n",
+			big, little, len, c_res, c_res, ft_res, ft_res
+		);
+		return (false);
+	}
+	return (true);
+}
+
+bool test_strnstr(void)
+{
+	const char big[] = 
+"The strnstr() function locates the first	occurrence of the  null-terminated"
+" string little in the string big, where not more than len characters"
+" are searched.  Characters that appear after	a \\0 character  are"
+" not  searched.  Since the strnstr() function is a FreeBSD specific API,"
+" it should only be used when portability is not a	concern.";
+	printf("test_strnstr: ");
+	OK();
+	if (!_test_strnstr(big, "Characters", sizeof("Characters"))) return false;
+	if (!_test_strnstr(big, "", 10)) return false;
+	if (!_test_strnstr(big, "parmesan du tieks", 8)) return false;
+	if (!_test_strnstr(big, "concern.", sizeof("concern."))) return false;
+	if (!_test_strnstr(big, "\0that", 64)) return false;
+	if (!_test_strnstr(big, "\0The", 4)) return false;
+	if (!_test_strnstr("", "", 0)) return false;
+	return (true);
 }
 
 int	main(void)
@@ -641,12 +910,20 @@ int	main(void)
 	if (!test_memset()) return 1;
 	if (!test_bzero()) return 1;
 	if (!test_memcpy()) return 1;
-	if (!test_strrchr()) return 1;
+	if (!test_memmove()) return 1;
+	if (!test_strlcpy()) return 1;
+	if (!test_strlcat()) return 1;
+	if (!test_toupper()) return 1;
+	if (!test_tolower()) return 1;
 	if (!test_strchr()) return 1;
+	if (!test_strrchr()) return 1;
+	if (!test_strncmp()) return 1;
+	if (!test_memchr()) return 1;
+	if (!test_memcmp()) return 1;
+	if (!test_strnstr()) return 1;
+	if (!test_atoi()) return 1;
 	if (!test_ft_itoa()) return 1;
 	if (!test_ft_split()) return 1;
-	if (!test_memchr()) return 1;
-	if (!test_atoi()) return 1;
 	if (!test_ft_strtrim()) return 1;
 	return (0);
 }

@@ -11,7 +11,7 @@ libft: test_libft
 	@./test_libft
 
 test_libft: $(LIBFT)
-	$(CC) $(CFLAGS) libft.c -lft -L../libft/ -o $@
+	$(CC) $(CFLAGS) libft.c -lbsd -lft -L../libft/ -o $@
 
 $(LIBFT):
 	$(MAKE) -C ../libft/ bonus
