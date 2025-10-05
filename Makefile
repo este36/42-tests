@@ -4,7 +4,9 @@ CFLAGS = -g -Wall -Wextra
 LIBFT = ../libft/libft.a
 
 
-all: test_libft
+all: libft
+
+libft: test_libft
 	@echo "[Libft Tests]"
 	@./test_libft
 
@@ -15,6 +17,11 @@ $(LIBFT):
 	$(MAKE) -C ../libft/ bonus
 
 clean:
+	rm -f test_*
+
+fclean: clean
 	$(MAKE) -C ../libft/ fclean
 
 re: clean all
+
+.PHONY: all clean fclean re libft
