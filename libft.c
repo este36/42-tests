@@ -771,7 +771,7 @@ bool _test_strncmp(const char *s1, const char *s2, const size_t n)
 {
 	const int c_res = strncmp(s1, s2, n);
 	const int ft_res = ft_strncmp(s1, s2, n);
-	if (c_res != ft_res)
+	if ((c_res > 0) != (ft_res > 0))
 	{
 		ERROR();
 		printf(
@@ -787,8 +787,8 @@ bool _test_strncmp(const char *s1, const char *s2, const size_t n)
 bool test_strncmp()
 {
 	printf("test_strncmp: ");
-	if (!_test_strncmp("Hey", "Hey", 64)) return false;
 	if (!_test_strncmp("Brother eww", "ew", 16)) return false;
+	if (!_test_strncmp("Hey", "Hey", 64)) return false;
 	if (!_test_strncmp("ewwwwwww12jkhv02", "ewww09s8df", 4)) return false;
 	if (!_test_strncmp("doooomy", "doooomy", sizeof("doooomy"))) return false;
 	OK();
@@ -888,7 +888,6 @@ bool test_strnstr(void)
 " not  searched.  Since the strnstr() function is a FreeBSD specific API,"
 " it should only be used when portability is not a	concern.";
 	printf("test_strnstr: ");
-	OK();
 	if (!_test_strnstr(big, "Characters", sizeof("Characters"))) return false;
 	if (!_test_strnstr(big, "", 10)) return false;
 	if (!_test_strnstr(big, "parmesan du tieks", 8)) return false;
@@ -896,6 +895,159 @@ bool test_strnstr(void)
 	if (!_test_strnstr(big, "\0that", 64)) return false;
 	if (!_test_strnstr(big, "\0The", 4)) return false;
 	if (!_test_strnstr("", "", 0)) return false;
+	OK();
+	return (true);
+}
+
+bool _test_calloc(size_t nmemb, size_t size)
+{
+	void *c_res = calloc(nmemb, size);
+	void *ft_res = ft_calloc(nmemb, size);
+	if ((!c_res || !ft_res) && c_res != ft_res)
+	{
+		ERROR();
+		printf(
+			"[inputs: nmemb: %zu, size: %zu]\nc_res: \n",
+			nmemb, size 
+		);
+		if (c_res) free(c_res);
+		if (ft_res) free(ft_res);
+		return (false);
+	}
+	if (c_res && ft_res && memcmp(c_res, ft_res, size * nmemb) != 0)
+	{
+		ERROR();
+		printf(
+			"[inputs: nmemb: %zu, size: %zu]\nc_res: \n",
+			nmemb, size 
+		);
+		print_memory(c_res, size * nmemb);
+		printf("\nft_res:\n");
+		print_memory(ft_res, size * nmemb);
+		printf("\n");
+		free(c_res);
+		free(ft_res);
+		return (false);
+	}
+	if (c_res) free(c_res);
+	if (ft_res) free(ft_res);
+	return (true);
+}
+
+bool test_calloc(void)
+{
+	printf("test_calloc: ");
+	if (!_test_calloc(1, 512)) return false;
+	if (!_test_calloc(0, 256)) return false;
+	if (!_test_calloc(256, 0)) return false;
+	if (!_test_calloc(1, 1)) return false;
+	OK();
+	return (true);
+}
+
+
+bool _test_strdup(const char *s)
+{
+	void *c_res = strdup(s);
+	void *ft_res = ft_strdup(s);
+	if ((!c_res || !ft_res) && c_res != ft_res)
+	{
+		ERROR();
+		printf(
+			"[input: s: %p \"%s\"]\n",
+			 s, s 
+		);
+		if (c_res) free(c_res);
+		if (ft_res) free(ft_res);
+		return (false);
+	}
+	if (c_res && ft_res && strcmp(c_res, ft_res) != 0)
+	{
+		ERROR();
+		printf(
+			"[input: s: %p \"%s\"]\nc_res:\n",
+			 s, s 
+		);
+		print_memory(c_res, strlen(c_res));
+		printf("\nft_res:\n");
+		print_memory(ft_res, strlen(ft_res));
+		printf("\n");
+		free(c_res);
+		free(ft_res);
+		return (false);
+	}
+	if (c_res) free(c_res);
+	if (ft_res) free(ft_res);
+	return (true);
+}
+
+
+bool test_strdup()
+{
+	printf("test_strdup: ");
+	if (!_test_strdup("Hello")) return false;
+	if (!_test_strdup("")) return false;
+	if (!_test_strdup("\122\t\133\012asd")) return false;
+	OK();
+	return (true);
+}
+
+bool _test_ft_substr(char const *s, unsigned int start, size_t len, const char *expected)
+{
+	char *res = ft_substr(s, start, len);
+	if (!res)
+		return (false);
+	if (strcmp(res, expected) != 0)
+	{
+		ERROR();
+		printf(
+			"[inputs: s: \"%s\", start: %d, len: %zu]\nres: \"%s\"\nexpected: \"%s\"\n",
+			s, start, len, res, expected
+		);
+		free(res);
+		return (false);
+	}
+	free(res);
+	return (true);
+}
+
+bool test_ft_substr(void)
+{
+	printf("test_ft_substr: ");
+	if (!_test_ft_substr("hello ca va", 0, 5, "hello")) return false;
+	if (!_test_ft_substr("12345Salut12345", 5, 5, "Salut")) return false;
+	if (!_test_ft_substr("", 0, 0, "")) return false;
+	OK();
+	return (true);
+}
+
+bool _test_ft_strjoin(char const *s1, char const *s2, const char *expected)
+{
+	char *res = ft_strjoin(s1, s2);
+	if (!res)
+		return (false);
+	if (strcmp(res, expected) != 0)
+	{
+		ERROR();
+		printf(
+			"[inputs: s1: \"%s\", s2: \"%s\"]\nres: \"%s\"\nexpected: \"%s\"\n",
+			s1, s2, res, expected
+		);
+		free(res);
+		return (false);
+	}
+	free(res);
+	return (true);
+}
+
+bool test_ft_strjoin(void)
+{
+	printf("test_ft_strjoin: ");
+	if (!_test_ft_strjoin("Hello,", "oui", "Hello,oui")) return false;
+	if (!_test_ft_strjoin("", "oui", "oui")) return false;
+	if (!_test_ft_strjoin("aah", "", "aah")) return false;
+	if (!_test_ft_strjoin("", "", "")) return false;
+	OK();
 	return (true);
 }
 
@@ -922,8 +1074,12 @@ int	main(void)
 	if (!test_memcmp()) return 1;
 	if (!test_strnstr()) return 1;
 	if (!test_atoi()) return 1;
-	if (!test_ft_itoa()) return 1;
-	if (!test_ft_split()) return 1;
+	if (!test_calloc()) return 1;
+	if (!test_strdup()) return 1;
+	if (!test_ft_substr()) return 1;
+	if (!test_ft_strjoin()) return 1;
 	if (!test_ft_strtrim()) return 1;
+	if (!test_ft_split()) return 1;
+	if (!test_ft_itoa()) return 1;
 	return (0);
 }
