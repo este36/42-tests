@@ -11,13 +11,15 @@ libft: test_libft
 	@./test_libft
 
 test_libft: $(LIBFT)
-	$(CC) $(CFLAGS) libft.c -lbsd -lft -L../libft/ -o $@
+	@echo "[INFO: Compiling $@...]"
+	@$(CC) $(CFLAGS) libft.c -lbsd -lft -L../libft/ -o $@
 
 $(LIBFT):
 	$(MAKE) -C ../libft/ bonus
 
 clean:
-	rm -f test_*
+	@echo "[INFO: Removing binaries...]"
+	@rm -f test_*
 
 fclean: clean
 	$(MAKE) -C ../libft/ fclean

@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
+#include <fcntl.h>
 #include <bsd/string.h>
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -431,16 +433,30 @@ bool test_strlen()
 	return (true);
 }
 
-void print_memory(const void *s, const size_t n)
+void print_memory(const void *ptr, size_t n)
 {
+	const unsigned char *p = ptr;
 	const char *hex = "0123456789abcdef";
+
 	for (size_t i = 0; i < n; i++)
 	{
-		write(1, &hex[((unsigned char *)s)[i] >> 4], 1);
-		write(1, &hex[((unsigned char *)s)[i] & 0xf], 1);
-		write(1, " ", 1);
-		if ((i + 1) % 8 == 0)
-		    write(1, "\n", 1);
+		putchar(hex[p[i] >> 4]);
+		putchar(hex[p[i] & 0xf]);
+		putchar(' ');
+
+		if ((i + 1) % 8 == 0 || i + 1 == n)
+		{
+			size_t remain = 8 - ((i + 1) % 8);
+			if (remain != 8 && i + 1 == n)
+				for (size_t k = 0; k < remain; k++)
+					printf("   ");
+
+			putchar(' ');
+			size_t start = i - ((i + 1) % 8 ? ((i + 1) % 8) - 1 : 7);
+			for (size_t j = start; j <= i; j++)
+				putchar(isprint(p[j]) ? p[j] : '.');
+			putchar('\n');
+		}
 	}
 }
 
@@ -497,12 +513,9 @@ bool test_memset(void)
 	t_test2 test2;
 	t_test3 test3;
 	char buf[1024];
-	if (!_test_memset(&test1, 0xa0, sizeof(t_test1)))
-		return (false);
-	if (!_test_memset(&test2, 0xff, sizeof(t_test2)))
-		return (false);
-	if (!_test_memset(&test3, 0x00, sizeof(t_test3)))
-		return (false);
+	if (!_test_memset(&test1, 0xa0, sizeof(t_test1))) return (false);
+	if (!_test_memset(&test2, 0xff, sizeof(t_test2))) return (false);
+	if (!_test_memset(&test3, 0x00, sizeof(t_test3))) return (false);
     if (!_test_memset(buf, 0x00, 0)) return false;
     if (!_test_memset(buf, 0xff, 1)) return false;
     if (!_test_memset(buf, 0x7f, 256)) return false;
@@ -1051,6 +1064,472 @@ bool test_ft_strjoin(void)
 	return (true);
 }
 
+char _strmapi_f(unsigned int index, char c)
+{
+	return (index % 2 == 0 ? toupper(c) : tolower(c));
+}
+
+bool _test_ft_strmapi(char const *s, const char *expected)
+{
+	char *res = ft_strmapi(s, _strmapi_f);
+	if (!res)
+		return false;
+	if (strcmp(res, expected) != 0)
+	{
+		ERROR();
+		printf(
+			"[input: s: \"%s\"]\nres: \"%s\"\nexpected: \"%s\"\n",
+			s, res, expected
+		);
+		free(res);
+		return (false);
+	}
+	free(res);
+	return (true);
+}
+
+bool test_ft_strmapi(void)
+{
+	printf("test_ft_strmapi: ");
+	if (!_test_ft_strmapi("Hello", "HeLlO")) return false;
+	if (!_test_ft_strmapi("", "")) return false;
+	if (!_test_ft_strmapi("12345", "12345")) return false;
+	if (!_test_ft_strmapi("bonjourrrreuh", "BoNjOuRrRrEuH")) return false;
+	OK();
+	return (true);
+}
+
+void _striteri_f(unsigned int index, char *c)
+{
+	*c = (index % 2 == 0 ? toupper(*c) : tolower(*c));
+	// printf("\n['%c', index: %d]", *c, index);
+}
+
+bool _test_ft_striteri(char *s, const char *expected)
+{
+	char *res = strdup(s);
+	if (!res)
+		return false;
+	ft_striteri(res, _striteri_f);
+	if (strcmp(res, expected) != 0)
+	{
+		ERROR();
+		printf(
+			"[input: s: \"%s\"]\nres: \"%s\"\nexpected: \"%s\"\n",
+			s, res, expected
+		);
+		free(res);
+		return (false);
+	}
+	free(res);
+	return (true);
+}
+
+bool test_ft_striteri(void)
+{
+	printf("test_ft_striteri: ");
+	if (!_test_ft_striteri("Hello", "HeLlO")) return false;
+	if (!_test_ft_striteri("", "")) return false;
+	if (!_test_ft_striteri("12345", "12345")) return false;
+	if (!_test_ft_striteri("bonjourrrreuh", "BoNjOuRrRrEuH")) return false;
+	OK();
+	return (true);
+}
+
+#define TEST_FILE_PATH "/tmp/fd_test_file"
+
+int get_test_file(void)
+{
+	int fd = open(TEST_FILE_PATH, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	assert(fd >= 0);
+	return fd;
+}
+
+bool test_file_eq(int fd, const char *str, size_t len)
+{
+	lseek(fd, 0, SEEK_SET);
+	char *buf = calloc(1, len);
+	if (!buf)
+		return (false);
+	if ((size_t)read(fd, buf, len) != len || memcmp(buf, str, len) != 0)
+	{
+		ERROR();
+		printf("result:\n");
+		print_memory(buf, len);
+		printf("\n");
+		printf("expected:\n");
+		print_memory(str, len);
+		printf("\n");
+		free(buf);
+		return (false);
+	}
+	free(buf);
+	return (true);
+}
+
+bool _test_ft_putchar_fd(int c)
+{
+	int fd = get_test_file();
+	ft_putchar_fd(c, fd);
+	return (test_file_eq(fd, (char *)&c, 1));
+}
+
+bool test_ft_putchar_fd(void)
+{
+	printf("test_ft_putchar_fd: ");
+	if (!_test_ft_putchar_fd('a')) return (false);
+	if (!_test_ft_putchar_fd('\0')) return (false);
+	if (!_test_ft_putchar_fd('\002')) return (false);
+	if (!_test_ft_putchar_fd('\001')) return (false);
+	OK();
+	return (true);
+}
+
+bool _test_ft_putstr_fd(const char *str)
+{
+	int fd = get_test_file();
+	ft_putstr_fd((char *)str, fd);
+	return (test_file_eq(fd, str, strlen(str)));
+}
+
+bool test_ft_putstr_fd(void)
+{
+	printf("test_ft_putstr_fd: ");
+	if (!_test_ft_putstr_fd("Hello")) return (false);
+	if (!_test_ft_putstr_fd("bonjoureeuh")) return (false);
+	if (!_test_ft_putstr_fd("bewbew")) return (false);
+	if (!_test_ft_putstr_fd("\xff\x01\x02\xff")) return (false);
+	OK();
+	return (true);
+}
+
+bool _test_ft_putendl_fd(const char *str)
+{
+	int fd = get_test_file();
+	ft_putendl_fd((char *)str, fd);
+	const size_t str_len = strlen(str);
+	char *expected = calloc(1, str_len + 2);
+	memcpy(expected, str, str_len);
+	expected[str_len] = '\n';
+	bool test_result = test_file_eq(fd, expected, str_len + 1);
+	free(expected);
+	return (test_result);
+}
+
+bool test_ft_putendl_fd(void)
+{
+	printf("test_ft_putendl_fd: ");
+	if (!_test_ft_putendl_fd("Hello")) return (false);
+	if (!_test_ft_putendl_fd("bonjoureeuh")) return (false);
+	if (!_test_ft_putendl_fd("bewbew")) return (false);
+	if (!_test_ft_putendl_fd("\xff\x01\x02\xff")) return (false);
+	OK();
+	return (true);
+}
+
+bool _test_ft_putnbr_fd(int n, const char *expected)
+{
+	int fd = get_test_file();
+	ft_putnbr_fd(n, fd);
+	return (test_file_eq(fd, expected, strlen(expected)));
+}
+
+bool test_ft_putnbr_fd(void)
+{
+	printf("test_ft_putnbr_fd: ");
+	if (!_test_ft_putnbr_fd(0x7FFFFFFF, "2147483647")) return (false);
+	if (!_test_ft_putnbr_fd(0x80000000, "-2147483648")) return (false);
+	if (!_test_ft_putnbr_fd(0, "0")) return (false);
+	if (!_test_ft_putnbr_fd(1234, "1234")) return (false);
+	if (!_test_ft_putnbr_fd(-9, "-9")) return (false);
+	if (!_test_ft_putnbr_fd(9, "9")) return (false);
+	if (!_test_ft_putnbr_fd(10, "10")) return (false);
+	if (!_test_ft_putnbr_fd(-10, "-10")) return (false);
+	if (!_test_ft_putnbr_fd(-2147483648LL, "-2147483648")) return (false);
+	if (!_test_ft_putnbr_fd(2147483647, "2147483647")) return (false);
+	if (!_test_ft_putnbr_fd(-2147483647, "-2147483647")) return (false);
+	OK();
+	return (true);
+}
+
+bool test_ft_lstnew(void)
+{
+	printf("test_ft_lstnew: ");
+	t_list *res = ft_lstnew(NULL);
+	if (!res)
+		return (false);
+	if (res->next != NULL)
+	{
+		ERROR();
+		printf("res->next != null\n");
+		return (false);
+		free(res);
+	}
+	if (res->content != NULL)
+	{
+		ERROR();
+		printf("res->content != NULL after calling ft_lstnew(NULL).");
+		free(res);
+		return (false);
+	}
+	OK();
+	free(res);
+	return (true);
+}
+
+void list_print(t_list *n)
+{
+	while (n)
+	{
+		printf("(");
+		if (n->content != NULL) printf("%d", *((int *)n->content));
+		else printf("NULL");
+		printf(")->");
+		n = n->next;
+	}
+	printf("NULL\n");
+}
+
+void list_free(t_list *n)
+{
+	while (n)
+	{
+		t_list *next = n->next;
+		if (n->content != NULL)
+			free(n->content);
+		free(n);
+		n = next;
+	}
+}
+
+bool list_eq(t_list *n1, t_list *n2)
+{
+	while (n1 && n2)
+	{
+		if ((n1->content == NULL || n2->content == NULL) && n2->content != n1->content)
+			return (false);
+		if (n1->content != NULL && *((int *)n1->content) != *((int *)n2->content))
+			return (false);
+		n1 = n1->next;
+		n2 = n2->next;
+	}
+	if ((n1 == NULL || n2 == NULL) && n2 != n1)
+		return (false);
+	return (true);
+}
+
+bool test_ft_lstadd_front(void)
+{
+    printf("test_ft_lstadd_front: ");
+    t_list *n = ft_lstnew(NULL);
+    t_list *next = ft_lstnew(NULL);
+    ft_lstadd_front(&n, next);
+    if (n != next)
+    {
+        ERROR();
+        printf("node n is not the new head.\n");
+        free(n);
+        free(next);
+        return false;
+    }
+    t_list *last = ft_lstnew(NULL);
+    ft_lstadd_front(&n, last);
+    if (n != last || n->next != next)
+    {
+        ERROR();
+        printf("node n is not the new head after second add.\n");
+        free(last->next);
+        free(last);
+        free(next);
+        return false;
+    }
+    list_free(n);
+    OK();
+    return true;
+}
+
+bool test_ft_lstsize(void)
+{
+    printf("test_ft_lstsize: ");
+    t_list *n = ft_lstnew(NULL);
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+	const size_t size = ft_lstsize(n);
+	if (size != 6)
+	{
+		ERROR();
+		printf("n: Node list of size 6:\nReturn value of ft_lstsize(n) is %zu.\n", size);
+		list_free(n);
+		return (false);
+	}
+	list_free(n);
+    OK();
+    return (true);
+}
+
+bool test_ft_lstlast(void)
+{
+    printf("test_ft_lstlast: ");
+    t_list *n = ft_lstnew(NULL);
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+	if (ft_lstlast(n) != n->next->next)
+	{
+		ERROR();
+		printf("Last node is not ft_lstlast(n).\n");
+		list_free(n);
+		return (false);
+	}
+	list_free(n);
+    OK();
+    return (true);
+}
+
+bool test_ft_lstadd_back(void)
+{
+	printf("test_ft_lstadd_back: ");
+    t_list *n = ft_lstnew(NULL);
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+	t_list *last = ft_lstnew(NULL);
+	ft_lstadd_back(&n, last);
+	if (n->next->next->next != last)
+	{
+		ERROR();
+		printf("Last node is not 'last' after ft_lstadd_back(&n, last).\n");
+		list_free(n);
+		list_free(last);
+		return false;
+	}
+	// list_print(n);
+	list_free(n);
+	OK();
+	return true;
+}
+
+bool test_ft_lstdelone(void)
+{
+	printf("test_ft_lstdelone: ");
+    t_list *n = ft_lstnew(NULL);
+    ft_lstadd_front(&n, ft_lstnew(NULL));
+	t_list *saved_next = n->next;
+	ft_lstdelone(n, free);
+	int *content = malloc(sizeof(int));
+	if (!content)
+		return false;
+	*content = 69;
+	saved_next->content = content;
+	// list_print(saved_next);
+	list_free(saved_next);
+	OK();
+	return (true);
+}
+
+int *alloc_int(int n)
+{
+	int *res = malloc(sizeof(int));
+	if (!res)
+		return NULL;
+	*res = n;
+	return res;
+}
+
+bool test_ft_lstclear(void)
+{
+	printf("test_ft_lstclear: ");
+    t_list *n = ft_lstnew(NULL);
+    ft_lstadd_front(&n, ft_lstnew(alloc_int(69)));
+    ft_lstadd_front(&n, ft_lstnew(alloc_int(42)));
+	ft_lstclear(&n, free);
+	if (n != NULL)
+	{
+		ERROR();
+		printf("n was not set to NULL after ft_lstclear(&n, del)");
+		return (false);
+	}
+	OK();
+	return (true);
+}
+
+static void iter_f(void *content)
+{
+	*((int *)content) *= 2 ;
+}
+
+bool test_ft_lstiter(void)
+{
+	printf("test_ft_lstiter: ");
+    t_list *n = ft_lstnew(alloc_int(25));
+    ft_lstadd_front(&n, ft_lstnew(alloc_int(5)));
+    ft_lstadd_front(&n, ft_lstnew(alloc_int(0)));
+    ft_lstadd_front(&n, ft_lstnew(alloc_int(10)));
+    t_list *expected = ft_lstnew(alloc_int(50));
+    ft_lstadd_front(&expected, ft_lstnew(alloc_int(10)));
+    ft_lstadd_front(&expected, ft_lstnew(alloc_int(0)));
+    ft_lstadd_front(&expected, ft_lstnew(alloc_int(20)));
+	ft_lstiter(n, iter_f);
+	if (!list_eq(n, expected))
+	{
+		ERROR();
+		printf("[inputs: lst: (10)->(0)->(5)->(25)->NULL, f: (content) => content *= 2]\nres:\n");
+		list_print(n);
+		printf("expected: \n");
+		list_print(expected);
+		list_free(n);
+		list_free(expected);
+		return (false);
+	}
+	list_free(n);
+	list_free(expected);
+	OK();
+	return (true);
+}
+
+static void *map_f(void *content)
+{
+	if (!content)
+		return NULL;
+	int *cpy = alloc_int(*((int *)content));
+	*((int *)cpy) *= 2;
+	return (cpy);
+}
+
+bool test_ft_lstmap(void)
+{
+	printf("test_ft_lstmap: ");
+    t_list *n = ft_lstnew(alloc_int(25));
+    ft_lstadd_front(&n, ft_lstnew(alloc_int(5)));
+    ft_lstadd_front(&n, ft_lstnew(alloc_int(0)));
+    ft_lstadd_front(&n, ft_lstnew(alloc_int(10)));
+    t_list *expected = ft_lstnew(alloc_int(50));
+    ft_lstadd_front(&expected, ft_lstnew(alloc_int(10)));
+    ft_lstadd_front(&expected, ft_lstnew(alloc_int(0)));
+    ft_lstadd_front(&expected, ft_lstnew(alloc_int(20)));
+	t_list *res = ft_lstmap(n, map_f, free);
+	if (!list_eq(res, expected))
+	{
+		ERROR();
+		printf("[inputs: lst: (10)->(0)->(5)->(25)->NULL, f: (content) => content *= 2]\nres:\n");
+		list_print(res);
+		printf("expected: \n");
+		list_print(expected);
+		list_free(res);
+		list_free(n);
+		list_free(expected);
+		return (false);
+	}
+	list_free(res);
+	list_free(n);
+	list_free(expected);
+	OK();
+	return (true);
+}
+
+
+
 int	main(void)
 {
 	if (!test_isalpha()) return 1;
@@ -1081,5 +1560,20 @@ int	main(void)
 	if (!test_ft_strtrim()) return 1;
 	if (!test_ft_split()) return 1;
 	if (!test_ft_itoa()) return 1;
+	if (!test_ft_strmapi()) return 1;
+	if (!test_ft_striteri()) return 1;
+	if (!test_ft_putchar_fd()) return 1;
+	if (!test_ft_putstr_fd()) return 1;
+	if (!test_ft_putendl_fd()) return 1;
+	if (!test_ft_putnbr_fd()) return 1;
+	if (!test_ft_lstnew()) return 1;
+	if (!test_ft_lstadd_front()) return 1;
+	if (!test_ft_lstsize()) return 1;
+	if (!test_ft_lstlast()) return 1;
+	if (!test_ft_lstadd_back()) return 1;
+	if (!test_ft_lstdelone()) return 1;
+	if (!test_ft_lstclear()) return 1;
+	if (!test_ft_lstiter()) return 1;
+	if (!test_ft_lstmap()) return 1;
 	return (0);
 }
