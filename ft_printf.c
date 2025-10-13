@@ -62,8 +62,8 @@ int main(int argc, char **argv)
 	switch (atoi(argv[2]))
 	{
 		case 1: { _PRINTF("rawdata %c rawdata", 'a'); } break;
-		case 2: { _PRINTF("rawdata %s rawdata", "hey"); } break;
-		case 3: { _PRINTF("rawdata %p rawdata", main); } break;
+		case 2: { _PRINTF("%s, %s", "hey", "\123\01\02\03"); } break;
+		case 3: { _PRINTF("rawdata %p rawdata", (void *)0xbabeffcc11); } break;
 		case 4: { _PRINTF("rawdata %d rawdata", 42); } break;
 		case 5: { _PRINTF("rawdata %i rawdata", 69); } break;
 		case 6: { _PRINTF("rawdata %u rawdata", 0xffffffff); } break;
