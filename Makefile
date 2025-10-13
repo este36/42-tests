@@ -15,7 +15,6 @@ test_libft: $(LIBFT)
 	@echo "[INFO: Compiling $@...]"
 	@$(CC) $(CFLAGS) libft.c -lbsd -lft -L../libft/ -o $@
 
-
 $(LIBFT):
 	$(MAKE) -C ../libft/ bonus
 
@@ -36,6 +35,7 @@ clean:
 
 fclean: clean
 	$(MAKE) -C ../libft/ fclean
+	$(MAKE) -C ../ft_printf/ fclean
 
 re: clean all
 
