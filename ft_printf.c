@@ -6,7 +6,7 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:02:21 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/21 16:14:44 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/21 22:03:26 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <limits.h>
+#include <ctype.h>
 
 typedef enum arg1
 {
@@ -28,7 +32,9 @@ do { \
 	int ret; \
 	switch (arg1) \
 	{ \
-		case DO_PRINT_ARGS: { printf("%s", #__VA_ARGS__); } break; \
+		case DO_PRINT_ARGS: { \
+			printf("%s\n", #__VA_ARGS__); \
+			} break; \
 		case DO_FT: { ret = ft_printf(__VA_ARGS__); } break; \
 		case DO_C: { ret = printf(__VA_ARGS__); } break; \
 		default: break; \
@@ -38,6 +44,9 @@ do { \
 } while (0) \
 
 #define PRINT_USAGE() printf("Usage : [--ft|--c] [0-9]\n")
+
+#define W_FMT(val) " %10" val " %*" val " %-10" val " %-*" val
+#define W_ARGS(val) val,		  10, val,  val,   		10, val
 
 int main(int argc, char **argv)
 {
@@ -61,17 +70,14 @@ int main(int argc, char **argv)
 	
 	switch (atoi(argv[2]))
 	{
-		case 1: { _PRINTF("rawdata %c %10c %-10c %c", 'a', 'a', 'a', 'a'); } break;
-		case 2: { _PRINTF("%s, %s, %10.5s", "hey", "\123\01\02\03", "Salut!"); } break;
-		case 3: { _PRINTF("rawdata %p rawdata", (void *)0xbabeffcc11); } break;
-		case 4: { _PRINTF("rawdata %d rawdata", 42); } break;
-		case 5: { _PRINTF("rawdata %i rawdata", 69); } break;
-		case 6: {
-			_PRINTF("rawdata %08u, %-8u, %8u, %u rawdata", 0xff, 0xff, 0xff, 0xffffffff);
+		case 1: {
+			_PRINTF("%c, %c, %s, %s, %p, %p, %d, %i, %u, %x, %X, %%",
+				'a', (char)0, "Hello", (char *)0, (void *)0xbabeffcc11, (void *)0, 42, 69,
+				0xffffffff, 0xffffffff, 0xffffffff);
 		} break;
-		case 7: { _PRINTF("rawdata %x rawdata", 0xffffffff); } break;
-		case 8: { _PRINTF("rawdata %X rawdata", 0xffffffff); } break;
-		case 9: { _PRINTF("rawdata %% rawdata"); } break;
+		case 2: {
+			_PRINTF(W_FMT("c"), W_ARGS('a'));
+		} break;
 		default: { PRINT_USAGE(); } break;
 	}
 	return (0);

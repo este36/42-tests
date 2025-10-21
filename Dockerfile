@@ -3,7 +3,7 @@ FROM ubuntu:latest
 WORKDIR /root
 
 RUN apt-get update && apt-get install -y \
-build-essential clang git curl libbsd-dev \
+build-essential clang git curl libbsd-dev valgrind \
 python3 python3-pip python3-venv python3-venv python3-dev python3-setuptools pipx
 
 ENV CC=clang

@@ -6,16 +6,16 @@ const ANSI_RESET = "\x1b[0m";
 
 function doTest(n)
 {
-	const c_stdout = execFileSync('./test_ft_printf',['--c', n.toString()]).toString();
-	const ft_stdout = execFileSync('./test_ft_printf',['--ft', n.toString()]).toString();
+	const c_stdout = execFileSync('./test_ft_printf',['--c', n.toString()]);
+	const ft_stdout = execFileSync('./test_ft_printf',['--ft', n.toString()]);
 	process.stdout.write(`Test ${n.toString()}:`);
-	if (ft_stdout !== c_stdout)
+	if (ft_stdout.toHex() !== c_stdout.toHex())
 	{
 		const args = execFileSync('./test_ft_printf',['--print-args', n.toString()]).toString();
 		process.stdout.write(`${ANSI_RED + " Error!" + ANSI_RESET}\n`);
 		console.log(`Arguments:\t${args}`);
-		console.log(`C result:\t\"${c_stdout}\"`);
-		console.log(`FT result:\t\"${ft_stdout}\"`);
+		console.log(`C result:\t\"${c_stdout.toString()}\"\n${c_stdout.toHex()}`);
+		console.log(`FT result:\t\"${ft_stdout.toString()}\n${ft_stdout.toHex()}"`);
 		return (false);
 	} else {
 		process.stdout.write(ANSI_GREEN + " OK\n" + ANSI_RESET);
