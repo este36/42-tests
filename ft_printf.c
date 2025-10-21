@@ -6,7 +6,7 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:02:21 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/21 14:36:29 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/21 16:14:44 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,13 @@ int main(int argc, char **argv)
 	
 	switch (atoi(argv[2]))
 	{
-		case 1: { _PRINTF("rawdata %c %10c %c", 'a', 'a', 'a'); } break;
+		case 1: { _PRINTF("rawdata %c %10c %-10c %c", 'a', 'a', 'a', 'a'); } break;
 		case 2: { _PRINTF("%s, %s, %10.5s", "hey", "\123\01\02\03", "Salut!"); } break;
 		case 3: { _PRINTF("rawdata %p rawdata", (void *)0xbabeffcc11); } break;
 		case 4: { _PRINTF("rawdata %d rawdata", 42); } break;
 		case 5: { _PRINTF("rawdata %i rawdata", 69); } break;
 		case 6: {
-			_PRINTF("rawdata %08u, %8u, %u rawdata", 0xff, 0xff, 0xffffffff);
+			_PRINTF("rawdata %08u, %-8u, %8u, %u rawdata", 0xff, 0xff, 0xff, 0xffffffff);
 		} break;
 		case 7: { _PRINTF("rawdata %x rawdata", 0xffffffff); } break;
 		case 8: { _PRINTF("rawdata %X rawdata", 0xffffffff); } break;
