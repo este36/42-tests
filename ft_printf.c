@@ -6,7 +6,7 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:02:21 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/21 22:03:26 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/22 13:43:53 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,13 @@ do { \
 		printf("[return value: %d]", ret); \
 } while (0) \
 
-#define PRINT_USAGE() printf("Usage : [--ft|--c] [0-9]\n")
+#define PRINT_USAGE() printf("Usage : <--ft|--c> <number>\n")
 
 #define W_FMT(val) " %10" val " %*" val " %-10" val " %-*" val
-#define W_ARGS(val) val,		  10, val,  val,   		10, val
+#define W_ARGS(val) (val),		  10, (val),  (val),   		10, (val)
 
+#define W_ZERO_FMT(val) " %010" val " %0*" val 
+#define W_ZERO_ARGS(val) (val),		  10, (val)
 int main(int argc, char **argv)
 {
 	t_arg1 arg1 = ARG_UNSET;
@@ -71,12 +73,96 @@ int main(int argc, char **argv)
 	switch (atoi(argv[2]))
 	{
 		case 1: {
+			_PRINTF("%c%c", 'a', 'a');
+		} break;
+		case 2: {
+			_PRINTF("%s%s", "Hello", (char *)0 );
+		} break;
+		case 3: {
+			_PRINTF("%p%p", (void *)0xbabeffcc11, (void *)0);
+		} break;
+		case 4: {
+			_PRINTF("%d",  42);
+		} break;
+		case 5: {
+			_PRINTF("%i",  69);
+		} break;
+		case 6: {
+			_PRINTF("%u",  0xffffffff);
+		} break;
+		case 7: {
+			_PRINTF("%x",  0xffffffff);
+		} break;
+		case 8: {
+			_PRINTF("%X",  0xffffffff);
+		} break;
+		case 9: {
+			_PRINTF("%%");
+		} break;
+		case 10: {
 			_PRINTF("%c, %c, %s, %s, %p, %p, %d, %i, %u, %x, %X, %%",
 				'a', (char)0, "Hello", (char *)0, (void *)0xbabeffcc11, (void *)0, 42, 69,
 				0xffffffff, 0xffffffff, 0xffffffff);
 		} break;
-		case 2: {
+		case 11: {
 			_PRINTF(W_FMT("c"), W_ARGS('a'));
+		} break;
+		case 12: {
+			_PRINTF(W_FMT("c"), W_ARGS(0));
+		} break;
+		case 13: {
+			_PRINTF(W_FMT("s"), W_ARGS("Hello"));
+		} break;
+		case 14: {
+			_PRINTF(W_FMT("s"), W_ARGS((char *)0));
+		} break;
+		case 15: {
+			_PRINTF(W_FMT("p"), W_ARGS((void *)0xbabeffcc11));
+		} break;
+		case 16: {
+			_PRINTF(W_FMT("p"), W_ARGS((void *)0));
+		} break;
+		case 17: {
+			_PRINTF(W_FMT("d"), W_ARGS(42));
+		} break;
+		case 18: {
+			_PRINTF(W_FMT("i"), W_ARGS(69));
+		} break;
+		case 19: {
+			_PRINTF(W_FMT("u"), W_ARGS(0xffffffff));
+		} break;
+		case 20: {
+			_PRINTF(W_FMT("x"), W_ARGS(0xffffffff));
+		} break;
+		case 21: {
+			_PRINTF(W_FMT("X"), W_ARGS(0xffffffff));
+		} break;
+		case 22: {
+			_PRINTF(W_ZERO_FMT("d"), W_ZERO_ARGS(0));
+		} break;
+		case 23: {
+			_PRINTF(W_ZERO_FMT("i"), W_ZERO_ARGS(0));
+		} break;
+		case 24: {
+			_PRINTF(W_ZERO_FMT("u"), W_ZERO_ARGS(0xffffffff));
+		} break;
+		case 25: {
+			_PRINTF(W_ZERO_FMT("x"), W_ZERO_ARGS(0xffffffff));
+		} break;
+		case 26: {
+			_PRINTF(W_ZERO_FMT("X"), W_ZERO_ARGS(0xffffffff));
+		} break;
+		case 27: {
+			_PRINTF(W_ZERO_FMT("d"), W_ZERO_ARGS(-42));
+		} break;
+		case 28: {
+			_PRINTF(W_ZERO_FMT("d"), W_ZERO_ARGS(42));
+		} break;
+		case 29: {
+			_PRINTF(W_ZERO_FMT("i"), W_ZERO_ARGS(-42));
+		} break;
+		case 30: {
+			_PRINTF(W_ZERO_FMT("i"), W_ZERO_ARGS(42));
 		} break;
 		default: { PRINT_USAGE(); } break;
 	}
