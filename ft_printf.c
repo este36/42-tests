@@ -6,7 +6,7 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:02:21 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/23 16:59:20 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/23 22:26:03 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 typedef enum arg1
 {
 	ARG_UNSET,
+	DO_ALL,
 	DO_C,
 	DO_FT,
 	DO_PRINT_ARGS
@@ -53,32 +54,24 @@ do { \
 
 #define W_PREC_FMT(val) " %10.5" val " %*.*" val " %-10.5" val " %-*.*" val
 #define W_PREC_ARGS(val) (val),		  10, 5, (val),  (val),   		10, 20, (val)
-int main(int argc, char **argv)
+
+int test(int arg1, int test_num)
 {
-	t_arg1 arg1 = ARG_UNSET;
-	if (argc <= 2)
+	switch (test_num)
 	{
-		PRINT_USAGE();
-		return (0);
-	}
-	if (strcmp(argv[1], "--print-args") == 0)
-		arg1 = DO_PRINT_ARGS;
-	else if (strcmp(argv[1], "--ft") == 0)
-		arg1 = DO_FT;
-	else if (strcmp(argv[1], "--c") == 0)
-		arg1 = DO_C;
-	else
-	{
-		PRINT_USAGE();
-		return (0);
-	}
-	
-	switch (atoi(argv[2]))
-	{
-// 		case -1: {
-// 			fclose(stdout);
-// 			_PRINTF("Hello");
-// 		} break;
+ 		case -1: {
+ 			fclose(stdout);
+ 			_PRINTF("Hello");
+			_PRINTF("%c%c", 'a', 'a');
+			_PRINTF("%s%s", "Hello", (char *)0 );
+			_PRINTF("%p%p", (void *)0xbabeffcc11, (void *)0);
+			_PRINTF("%d %d %d",  42, -42, INT_MIN);
+			_PRINTF("%i %i %i",  69, -69, INT_MIN);
+			_PRINTF("%u",  0xffffffff);
+			_PRINTF("%x",  0xffffffff);
+			_PRINTF("%X",  0xffffffff);
+			_PRINTF("%%");
+ 		} break;
 		case 0: {
 			_PRINTF("Hello");
 		} break;
@@ -201,7 +194,46 @@ int main(int argc, char **argv)
 		case 39: {
 			_PRINTF(W_PREC_FMT("i") W_PREC_FMT("i"), W_PREC_ARGS(69), W_PREC_ARGS(INT_MIN));
 		} break;
+		case 40: {
+			_PRINTF(W_PREC_FMT("s"), W_PREC_ARGS("Hello"));
+		} break;
+		case 41: {
+			_PRINTF(W_PREC_FMT("s"), W_PREC_ARGS((char *)0));
+		} break;
+		case 42: {
+			printf("TEST END");
+		} break;
 		default: { PRINT_USAGE(); } break;
 	}
+	return (0);
+}
+
+int main(int argc, char **argv)
+{
+	t_arg1 arg1 = ARG_UNSET;
+	if (argc <= 2)
+	{
+		PRINT_USAGE();
+		return (0);
+	}
+	if (strcmp(argv[1], "--print-args") == 0)
+		arg1 = DO_PRINT_ARGS;
+	else if (strcmp(argv[1], "--ft") == 0)
+		arg1 = DO_FT;
+	else if (strcmp(argv[1], "--c") == 0)
+		arg1 = DO_C;
+	else
+	{
+		PRINT_USAGE();
+		return (0);
+	}
+
+	if (strcmp(argv[2], "--do-all") == 0)
+	{
+		for (int i = 0; i < 44; i++)
+			test(arg1, i);
+	}
+	else
+		test(arg1, atoi(argv[2]));
 	return (0);
 }
