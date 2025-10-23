@@ -13,7 +13,7 @@ libft: test_libft
 
 test_libft: $(LIBFT)
 	@echo "[INFO: Compiling $@...]"
-	@$(CC) $(CFLAGS) libft.c ../libft/libft.a -lbsd  -o $@
+	@$(CC) $(CFLAGS) libft.c $^ -lbsd  -o $@
 
 $(LIBFT):
 	$(MAKE) -C ../libft/ bonus
@@ -24,7 +24,7 @@ ft_printf: test_ft_printf
 
 test_ft_printf: $(LIBFTPRINTF)
 	@echo "[INFO: Compiling $@...]"
-	@$(CC) $(CFLAGS) ft_printf.c -lftprintf -L../ft_printf/ -o $@
+	@$(CC) $(CFLAGS) ft_printf.c $^ -o $@
 
 $(LIBFTPRINTF):
 	$(MAKE) -C ../ft_printf re
