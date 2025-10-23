@@ -20,7 +20,7 @@ $(LIBFT):
 
 ft_printf: test_ft_printf
 	@echo "[ft_printf Tests]"
-	docker run --rm -it -v ~/42/tests/:/mnt -w /mnt node bash -c "node ft_printf.js"
+	@docker run --rm -it -v ~/42/tests/:/mnt -w /mnt node bash -c "node ft_printf.js"
 
 test_ft_printf: $(LIBFTPRINTF)
 	@echo "[INFO: Compiling $@...]"
@@ -39,4 +39,4 @@ fclean: clean
 
 re: clean all
 
-.PHONY: all clean fclean re libft
+.PHONY: test_libft test_ft_printf all clean fclean re libft
