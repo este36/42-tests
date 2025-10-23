@@ -5,7 +5,7 @@ LIBFT = ../libft/libft.a
 LIBFTPRINTF = ../ft_printf/libftprintf.a
 
 
-all: libft ft_printf
+all: ft_printf
 
 libft: test_libft
 	@echo "[Libft Tests]"
@@ -13,14 +13,14 @@ libft: test_libft
 
 test_libft: $(LIBFT)
 	@echo "[INFO: Compiling $@...]"
-	@$(CC) $(CFLAGS) libft.c -lbsd -lft -L../libft/ -o $@
+	@$(CC) $(CFLAGS) libft.c ../libft/libft.a -lbsd  -o $@
 
 $(LIBFT):
 	$(MAKE) -C ../libft/ bonus
 
 ft_printf: test_ft_printf
 	@echo "[ft_printf Tests]"
-	@docker run --rm -it -v ~/42/tests/:/mnt -w /mnt node bash -c "node ft_printf.js"
+	node ft_printf.js
 
 test_ft_printf: $(LIBFTPRINTF)
 	@echo "[INFO: Compiling $@...]"
