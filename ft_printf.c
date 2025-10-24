@@ -46,8 +46,8 @@ do { \
 
 #define PRINT_USAGE() printf("Usage : <--ft|--c> <number>\n")
 
-#define W_FMT(val) " %10" val " %*" val " %-10" val " %-*" val
-#define W_ARGS(val) (val),		  10, (val),  (val),   		10, (val)
+#define W_FMT(val) " %10" val " %*" val " %-10" val " %-*" val " %-2" val
+#define W_ARGS(val) (val),		  10, (val),  (val),   		10, (val), (val)
 
 #define W_ZERO_FMT(val) " %010" val " %0*" val 
 #define W_ZERO_ARGS(val) (val),		  10, (val)
@@ -126,10 +126,10 @@ int test(int arg1, int test_num)
 			_PRINTF(W_FMT("p"), W_ARGS((void *)0));
 		} break;
 		case 17: {
-			_PRINTF(W_FMT("d") W_FMT("d"),  W_ARGS(42), W_ARGS(INT_MIN));
+			_PRINTF( "\n" W_FMT("d") W_FMT("d") "\n" W_FMT("d"),  W_ARGS(42), W_ARGS(INT_MIN), W_ARGS(-24));
 		} break;
 		case 18: {
-			_PRINTF(W_FMT("i") W_FMT("i"), W_ARGS(69), W_ARGS(INT_MIN));
+			_PRINTF( "\n" W_FMT("i") W_FMT("i") "\n" W_FMT("i"), W_ARGS(69), W_ARGS(INT_MIN), W_ARGS(-24));
 		} break;
 		case 19: {
 			_PRINTF(W_FMT("u"), W_ARGS(0xffffffff));
