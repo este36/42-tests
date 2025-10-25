@@ -44,6 +44,10 @@ for (let i = -1; i <= TEST_COUNT; i++)
 		console.log("[Bonus: 0]");
 	else if (i == 31)
 		console.log("[Bonus: .]");
+	else if (i == 42)
+		console.log("[Bonus: #]");
+	else if (i == 48)
+		console.log("[Bonus: space]");
 	doTest(i);
 	// if (!doTest(i)) process.exit(1);
 }

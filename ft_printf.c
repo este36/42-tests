@@ -19,6 +19,9 @@
 #include <limits.h>
 #include <ctype.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-overflow"
+
 typedef enum arg1
 {
 	ARG_UNSET,
@@ -183,13 +186,13 @@ int test(int arg1, int test_num)
 			_PRINTF(W_PREC_FMT("X"), W_PREC_ARGS(0xffffffff));
 		} break;
 		case 36: {
-			_PRINTF(W_PREC_FMT("d") "%04.2d", W_PREC_ARGS(-42), -4825);
+			_PRINTF(W_PREC_FMT("d") "%4.2d", W_PREC_ARGS(-42), -4825);
 		} break;
 		case 37: {
 			_PRINTF(W_PREC_FMT("d") W_PREC_FMT("d"), W_PREC_ARGS(42), W_PREC_ARGS(INT_MIN));
 		} break;
 		case 38: {
-			_PRINTF(W_PREC_FMT("i") "%04i", W_PREC_ARGS(-42), -4825);
+			_PRINTF(W_PREC_FMT("i") "%4i", W_PREC_ARGS(-42), -4825);
 		} break;
 		case 39: {
 			_PRINTF(W_PREC_FMT("i") W_PREC_FMT("i"), W_PREC_ARGS(69), W_PREC_ARGS(INT_MIN));
@@ -201,6 +204,30 @@ int test(int arg1, int test_num)
 			_PRINTF(W_PREC_FMT("s"), W_PREC_ARGS((char *)0));
 		} break;
 		case 42: {
+			_PRINTF("%#x %#x", INT_MAX, UINT_MAX);
+		} break;
+		case 43: {
+			_PRINTF("%#X %#X", INT_MAX, UINT_MAX);
+		} break;
+		case 44: {
+			_PRINTF("%#X %#X %#X %#X", 0, 1, 2, 42);
+		} break;
+		case 45: {
+			_PRINTF("%#x %#x %#x %#x", 0, 1, 2, 42);
+		} break;
+		case 46: {
+			_PRINTF("%#X %#X %#X %#X", -100, -1, -2, -42);
+		} break;
+		case 47: {
+			_PRINTF("%#x %#x %#x %#x", -100, -1, -2, -42);
+		} break;
+		case 48: {
+			_PRINTF(" % d % d % d % d", 0, 42, -42, INT_MIN);
+		} break;
+		case 49: {
+			_PRINTF(" % i % i % i % i", 0, 42, -42, INT_MIN);
+		} break;
+		case 50: {
 			printf("TEST END");
 		} break;
 		default: { PRINT_USAGE(); } break;
@@ -237,3 +264,5 @@ int main(int argc, char **argv)
 		test(arg1, atoi(argv[2]));
 	return (0);
 }
+
+#pragma GCC diagnostic pop
