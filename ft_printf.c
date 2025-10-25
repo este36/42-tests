@@ -228,6 +228,12 @@ int test(int arg1, int test_num)
 			_PRINTF(" % i % i % i % i", 0, 42, -42, INT_MIN);
 		} break;
 		case 50: {
+			_PRINTF(" %+d %+d %+d %+d", 0, 42, -42, INT_MIN);
+		} break;
+		case 51: {
+			_PRINTF(" %+i %+i %+i %+i", 0, 42, -42, INT_MIN);
+		} break;
+		case 52: {
 			printf("TEST END");
 		} break;
 		default: { PRINT_USAGE(); } break;

@@ -48,6 +48,8 @@ for (let i = -1; i <= TEST_COUNT; i++)
 		console.log("[Bonus: #]");
 	else if (i == 48)
 		console.log("[Bonus: space]");
+	else if (i == 50)
+		console.log("[Bonus: +]");
 	doTest(i);
 	// if (!doTest(i)) process.exit(1);
 }
