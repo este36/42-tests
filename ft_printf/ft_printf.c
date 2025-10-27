@@ -6,11 +6,11 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:02:21 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/27 17:54:52 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/27 19:37:41 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../ft_printf/ft_printf.h"
+#include "../../ft_printf/ft_printf.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

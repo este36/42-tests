@@ -6,11 +6,11 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 19:51:47 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/23 22:29:57 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/27 19:40:05 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft/libft.h"
+#include "../../libft/libft.h"
 #include <fcntl.h>
 #include <bsd/string.h>
 #include <assert.h>
@@ -1529,52 +1529,53 @@ bool test_ft_lstmap(void)
 	return (true);
 }
 
-
+// #define FAIL() return 1
+#define FAIL() (void)0
 
 int	main(void)
 {
-	if (!test_isalpha()) return 1;
-	if (!test_isdigit()) return 1;
-	if (!test_isalnum()) return 1;
-	if (!test_isascii()) return 1;
-	if (!test_isprint()) return 1;
-	if (!test_strlen()) return 1;
-	if (!test_memset()) return 1;
-	if (!test_bzero()) return 1;
-	if (!test_memcpy()) return 1;
-	if (!test_memmove()) return 1;
-	if (!test_strlcpy()) return 1;
-	if (!test_strlcat()) return 1;
-	if (!test_toupper()) return 1;
-	if (!test_tolower()) return 1;
-	if (!test_strchr()) return 1;
-	if (!test_strrchr()) return 1;
-	if (!test_strncmp()) return 1;
-	if (!test_memchr()) return 1;
-	if (!test_memcmp()) return 1;
-	if (!test_strnstr()) return 1;
-	if (!test_atoi()) return 1;
-	if (!test_calloc()) return 1;
-	if (!test_strdup()) return 1;
-	if (!test_ft_substr()) return 1;
-	if (!test_ft_strjoin()) return 1;
-	if (!test_ft_strtrim()) return 1;
-	if (!test_ft_split()) return 1;
-	if (!test_ft_itoa()) return 1;
-	if (!test_ft_strmapi()) return 1;
-	if (!test_ft_striteri()) return 1;
-	if (!test_ft_putchar_fd()) return 1;
-	if (!test_ft_putstr_fd()) return 1;
-	if (!test_ft_putendl_fd()) return 1;
-	if (!test_ft_putnbr_fd()) return 1;
-	if (!test_ft_lstnew()) return 1;
-	if (!test_ft_lstadd_front()) return 1;
-	if (!test_ft_lstsize()) return 1;
-	if (!test_ft_lstlast()) return 1;
-	if (!test_ft_lstadd_back()) return 1;
-	if (!test_ft_lstdelone()) return 1;
-	if (!test_ft_lstclear()) return 1;
-	if (!test_ft_lstiter()) return 1;
-	if (!test_ft_lstmap()) return 1;
+	if (!test_isalpha()) FAIL();
+	if (!test_isdigit()) FAIL();
+	if (!test_isalnum()) FAIL();
+	if (!test_isascii()) FAIL();
+	if (!test_isprint()) FAIL();
+	if (!test_strlen()) FAIL();
+	if (!test_memset()) FAIL();
+	if (!test_bzero()) FAIL();
+	if (!test_memcpy()) FAIL();
+	if (!test_memmove()) FAIL();
+	if (!test_strlcpy()) FAIL();
+	if (!test_strlcat()) FAIL();
+	if (!test_toupper()) FAIL();
+	if (!test_tolower()) FAIL();
+	if (!test_strchr()) FAIL();
+	if (!test_strrchr()) FAIL();
+	if (!test_strncmp()) FAIL();
+	if (!test_memchr()) FAIL();
+	if (!test_memcmp()) FAIL();
+	if (!test_strnstr()) FAIL();
+	if (!test_atoi()) FAIL();
+	if (!test_calloc()) FAIL();
+	if (!test_strdup()) FAIL();
+	if (!test_ft_substr()) FAIL();
+	if (!test_ft_strjoin()) FAIL();
+	if (!test_ft_strtrim()) FAIL();
+	if (!test_ft_split()) FAIL();
+	if (!test_ft_itoa()) FAIL();
+	if (!test_ft_strmapi()) FAIL();
+	if (!test_ft_striteri()) FAIL();
+	if (!test_ft_putchar_fd()) FAIL();
+	if (!test_ft_putstr_fd()) FAIL();
+	if (!test_ft_putendl_fd()) FAIL();
+	if (!test_ft_putnbr_fd()) FAIL();
+	if (!test_ft_lstnew()) FAIL();
+	if (!test_ft_lstadd_front()) FAIL();
+	if (!test_ft_lstsize()) FAIL();
+	if (!test_ft_lstlast()) FAIL();
+	if (!test_ft_lstadd_back()) FAIL();
+	if (!test_ft_lstdelone()) FAIL();
+	if (!test_ft_lstclear()) FAIL();
+	if (!test_ft_lstiter()) FAIL();
+	if (!test_ft_lstmap()) FAIL();
 	return (0);
 }
