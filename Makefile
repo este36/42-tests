@@ -13,18 +13,18 @@ libft: test_libft
 
 test_libft: $(LIBFT)
 	@echo "[INFO: Compiling $@...]"
-	@$(CC) $(CFLAGS) libft.c $^ -lbsd  -o $@
+	@$(CC) $(CFLAGS) libft/libft.c $^ -lbsd  -o $@
 
 $(LIBFT):
 	$(MAKE) -C ../libft/ bonus
 
 ft_printf: test_ft_printf
 	@echo "[ft_printf Tests]"
-	node ft_printf.js
+	node ft_printf/ft_printf.js
 
 test_ft_printf: $(LIBFTPRINTF)
 	@echo "[INFO: Compiling $@...]"
-	@$(CC) $(CFLAGS) ft_printf.c $^ -o $@
+	@$(CC) $(CFLAGS) ft_printf/ft_printf.c $^ -o $@
 
 $(LIBFTPRINTF):
 	$(MAKE) -C ../ft_printf re
@@ -34,8 +34,8 @@ clean:
 	@rm -f test_*
 
 fclean: clean
-	$(MAKE) -C ../libft/ fclean
-	$(MAKE) -C ../ft_printf/ fclean
+	$(MAKE) -C ../libft/ fclean || true;
+	$(MAKE) -C ../ft_printf/ fclean || true;
 
 re: clean all
 

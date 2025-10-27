@@ -6,7 +6,7 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:02:21 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/23 22:26:03 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/27 17:54:52 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ int main(int argc, char **argv)
 
 	if (strcmp(argv[2], "--do-all") == 0)
 	{
-		for (int i = 0; i < 44; i++)
+		for (int i = 0; i < 43; i++)
 			test(arg1, i);
 	}
 	else
