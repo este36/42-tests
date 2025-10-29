@@ -3,9 +3,12 @@ CFLAGS = -g -Wall -Wextra -Werror
 
 LIBFT = ../libft/libft.a
 LIBFTPRINTF = ../ft_printf/libftprintf.a
-LIBGNL = ../get_next_line/libgnl.a
 
-all: ft_printf
+GNL_SRCS =\
+../get_next_line/get_next_line.c\
+../get_next_line/get_next_line_utils.c\
+
+all: get_next_line
 
 libft: test_libft
 	@echo "[Libft Tests]"
@@ -39,19 +42,13 @@ get_next_line: test_gnl_1 test_gnl_10 test_gnl_1M
 	@node gnl/gnl.js test_gnl_1M
 
 test_gnl_1:
-	printf '1' > ../get_next_line/buffer_size.txt
-	$(MAKE) -C ../get_next_line/ re;
-	cc $(CFLAGS) gnl/gnl.c $(LIBGNL) -o $@
+	cc $(CFLAGS) -D BUFFER_SIZE=1 gnl/gnl.c $(GNL_SRCS) -o $@
 
 test_gnl_10:
-	printf '10' > ../get_next_line/buffer_size.txt
-	$(MAKE) -C ../get_next_line/ re;
-	cc $(CFLAGS) gnl/gnl.c $(LIBGNL) -o $@
+	cc $(CFLAGS) -D BUFFER_SIZE=10 gnl/gnl.c $(GNL_SRCS) -o $@
 
 test_gnl_1M:
-	printf '1000000' > ../get_next_line/buffer_size.txt
-	$(MAKE) -C ../get_next_line/ re;
-	cc $(CFLAGS) gnl/gnl.c $(LIBGNL) -o $@
+	cc $(CFLAGS) -D BUFFER_SIZE=1000000 gnl/gnl.c $(GNL_SRCS) -o $@
 
 clean:
 	@echo "[INFO: Removing binaries...]"
@@ -60,7 +57,6 @@ clean:
 fclean: clean
 	$(MAKE) -C ../libft/ fclean || true;
 	$(MAKE) -C ../ft_printf/ fclean || true;
-	$(MAKE) -C ../get_next_line/ fclean || true;
 
 re: clean all
 
