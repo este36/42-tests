@@ -1,0 +1,2 @@
+#!/bin/bash
+cat gnl/files/multiple_line_with_nl | ./$1 --stdin

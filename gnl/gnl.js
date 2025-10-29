@@ -78,7 +78,7 @@ for (const test_file of test_files)
 
 process.stdout.write("Test: stdin:");
 const stdin_expected = exec(['cat', './gnl/files/multiple_line_with_nl']);
-const stdin_result = exec([`./gnl/test_gnl_stdin`, test_gnl]);
+const stdin_result = exec([`./gnl/stdin_test`, test_gnl]);
 if (stdin_result.toString() !== stdin_expected.toString()) {
 	ERROR();
 	console.log(stdin_result.toString());
