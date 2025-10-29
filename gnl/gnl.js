@@ -76,6 +76,17 @@ console.log("[Files]");
 for (const test_file of test_files)
 	doFileTest(test_file);
 
+process.stdout.write("Test: stdin:");
+const stdin_expected = exec(['cat', './gnl/files/multiple_line_with_nl']);
+const stdin_result = exec([`./gnl/test_gnl_stdin`, test_gnl]);
+if (stdin_result.toString() !== stdin_expected.toString()) {
+	ERROR();
+	console.log(stdin_result.toString());
+	console.log(stdin_expected.toString());
+} else {
+	OK();
+}
+
 console.log("[Bad file descriptors]");
 testBadFileDesciptor("Read after end", 1, "(null)");
 testBadFileDesciptor("fd == -1", 1, "(null)");
