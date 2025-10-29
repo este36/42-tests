@@ -6,7 +6,7 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:03:54 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/29 00:39:18 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/29 01:29:03 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void print_memory(const void *ptr, size_t n)
 }
 
 #define PRINT_USAGE()\
-	printf("Usage: gnl <file-path|'--test'> [test-number|'--debug']\n");
+	printf("Usage: gnl <file-path|'--test'|'--stdin'> [test-number|'--debug']\n");
 
 int	main(int argc, char **argv)
 {
