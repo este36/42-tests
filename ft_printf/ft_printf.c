@@ -6,7 +6,7 @@
 /*   By: emercier <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 17:02:21 by emercier          #+#    #+#             */
-/*   Updated: 2025/10/27 19:37:41 by emercier         ###   ####lausanne.ch   */
+/*   Updated: 2025/10/28 18:03:14 by emercier         ###   ####lausanne.ch   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@
 #include <stddef.h>
 #include <limits.h>
 #include <ctype.h>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-overflow"
 
 typedef enum arg1
 {
@@ -56,7 +53,7 @@ do { \
 #define W_ZERO_ARGS(val) (val),		  10, (val)
 
 #define W_PREC_FMT(val) " %10.5" val " %*.*" val " %-10.5" val " %-*.*" val
-#define W_PREC_ARGS(val) (val),		  10, 5, (val),  (val),   		10, 20, (val)
+#define W_PREC_ARGS(val) (val),		  50, 20, (val),  (val),   		50, 20, (val)
 
 int test(int arg1, int test_num)
 {
@@ -270,5 +267,3 @@ int main(int argc, char **argv)
 		test(arg1, atoi(argv[2]));
 	return (0);
 }
-
-#pragma GCC diagnostic pop
