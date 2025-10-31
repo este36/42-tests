@@ -5,6 +5,8 @@ LIBFT = ../libft/libft.a
 LIBFTPRINTF = ../ft_printf/libftprintf.a
 
 GNL_SRCS =\
+gnl/gnl.c\
+gnl/read.c\
 ../get_next_line/get_next_line.c\
 ../get_next_line/get_next_line_utils.c\
 
@@ -42,17 +44,16 @@ get_next_line: test_gnl_1 test_gnl_10 test_gnl_1M
 	@node gnl/gnl.js test_gnl_1M
 
 test_gnl_1:
-	cc $(CFLAGS) -D BUFFER_SIZE=1 gnl/gnl.c $(GNL_SRCS) -o $@
+	cc $(CFLAGS) -D BUFFER_SIZE=1 $(GNL_SRCS) -o $@
 
 test_gnl_10:
-	cc $(CFLAGS) -D BUFFER_SIZE=10 gnl/gnl.c $(GNL_SRCS) -o $@
+	cc $(CFLAGS) -D BUFFER_SIZE=10 $(GNL_SRCS) -o $@
 
 test_gnl_1M:
-	cc $(CFLAGS) -D BUFFER_SIZE=1000000 gnl/gnl.c $(GNL_SRCS) -o $@
+	cc $(CFLAGS) -D BUFFER_SIZE=1000000 $(GNL_SRCS) -o $@
 
 clean:
-	@echo "[INFO: Removing binaries...]"
-	@rm -f test_*
+	rm -f test_*
 
 fclean: clean
 	$(MAKE) -C ../libft/ fclean || true;
